@@ -159,3 +159,22 @@ class BioSeq:
             return sorted(res, key=len, reverse=True)
         return res
 
+    def inverted_tandem_repeat(self, itr_len):
+        """ Searches for inverted tandem repeats of given length. """
+        for i in range(len(self.seq) - itr_len - 1):
+            sub_seq = self.seq[i:i + itr_len]
+            if sub_seq == sub_seq[::-1]:
+                if self.seq_type == 'DNA':
+                    mapping = str.maketrans('ATCG', 'TAGC')
+                else:
+                    mapping = str.maketrans('AUCG', 'UAGC')
+                sub_seq_rev = sub_seq.translate(mapping)[::-1]
+
+                for j in range(len(self.seq) - itr_len):
+                    sub_seq_2 = self.seq[j:j + itr_len]
+                    if sub_seq_2 == sub_seq_rev:
+                        if j > i+8:
+                            print(f"{sub_seq} at pos {i}:{i+8} = {sub_seq_2} at pos {j}:{j+8}.")
+
+
+
